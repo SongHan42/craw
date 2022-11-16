@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$+gpw6gkmqzvuu8+fcewrn!pfpfa*^^k+jnb@vj1z*4atto*bu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'naverCrawing.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'smart_store_crawing',
+        'NAME': 'smart_store_crawling',
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST': 'localhost',
@@ -120,7 +120,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+import os
+
+#ROOT_DIR = os.path.dirname(BASE_DIR)
+
+STATIC_URL = '/static/'
+#STATIC_DIR = os.path.join(ROOT_DIR, 'static')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIFILES_DIRS = [
+    STATIC_DIR,
+]
+
+#STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
