@@ -5,9 +5,10 @@ from . import setData
 from . import urlParse
 import openpyxl as xl
 import os
+from webdriver_manager.chrome import ChromeDriverManager
 
 def crawing(url):
-    s = Service('./naver/crawing/chromedriver') # Windows는 chromedriver.exe로 변경
+    # s = Service('./naver/crawing/chromedriver') # Windows는 chromedriver.exe로 변경
     
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument( '--headless' )     # 크롬창이 열리지 않음
@@ -15,8 +16,8 @@ def crawing(url):
     chrome_options.add_argument( '--disable-gpu' )  # GUI를 사용할 수 없는 환경에서 설정, linux, docker 등
     # chrome_options.add_argument(f"--window-size={ WINDOW_SIZE }")
     chrome_options.add_argument('Content-Type=application/json; charset=utf-8')
-    
-    driver = webdriver.Chrome( service=s , options=chrome_options )
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options )
+    # driver = webdriver.Chrome( service=s , options=chrome_options )
 
     delivery = {}
     origin_area = {}

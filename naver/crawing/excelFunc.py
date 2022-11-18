@@ -35,12 +35,12 @@ def set_category(category):
             elif row_data[3].value and row_data[4].value:
                 category[row_data[1].value][row_data[2].value][row_data[3].value][row_data[4].value] = row_data[0].value
 
-def save_xl(data, sheet, row_count):
-    for row_data in sheet.iter_rows(min_row=2, max_row=2, values_only=True):
-        col_name = list(row_data)
-    for idx, key in enumerate(col_name):
-        if data.get(key):
-            sheet.cell(row=row_count, column=idx + 1).value = data[key]
+# def save_xl(data, sheet, row_count):
+#     for row_data in sheet.iter_rows(min_row=2, max_row=2, values_only=True):
+#         col_name = list(row_data)
+#     for idx, key in enumerate(col_name):
+#         if data.get(key):
+#             sheet.cell(row=row_count, column=idx + 1).value = data[key]
 
 def db_to_xl():
     wb = xl.load_workbook('./naver/crawing/excel/naver.xlsx')
