@@ -40,12 +40,6 @@ class Shipping(models.Model):
     # 지역별 차등 배송비
     extra_installation_cost = models.IntegerField(null = True)
 
-class AfterService(models.Model):
-    template_code = models.IntegerField(null = True)
-    phone_number = models.CharField(max_length = 20, null = True)
-    announcement = models.TextField(null = True)
-    seller_specifics = models.TextField(null = True)
-
 
 class Product(models.Model):
     # ProductState = (
@@ -95,7 +89,7 @@ class Product(models.Model):
     info_model_name = models.CharField(max_length = 100, null = True)
     info_authorization = models.TextField(null = True)
     info_manufacturer = models.TextField(null = True)
-    after_service = models.ForeignKey(AfterService, on_delete = models.SET_NULL, null = True)
+    # after_service = models.ForeignKey(AfterService, on_delete = models.SET_NULL, null = True)
     pc_instant_discount_value = models.IntegerField(null = True)
     # pc_instant_discount_unit = models.CharField(max_length = 10, null = True, choices = Unit)
     pc_instant_discount_unit = models.CharField(max_length = 10, null = True)
@@ -116,6 +110,14 @@ class Product(models.Model):
     review_exposure_state = models.BooleanField(null = True)
     review_non_exposure_reson = models.TextField(null = True)
     # "스토어찜회원 전용여부"
+
+class AfterService(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    template_code = models.IntegerField(null = True)
+    phone_number = models.CharField(max_length = 20, null = True)
+    announcement = models.TextField(null = True)
+    seller_specifics = models.TextField(null = True)
+
 
 class Book(models.Model):
     product = models.ForeignKey(Product, on_delete = models.CASCADE)

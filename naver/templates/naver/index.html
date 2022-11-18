@@ -1,5 +1,6 @@
 <form action="{% url 'crawing' %}" method="post">
-{% csrf_token %}
-<input type="text" name="url" />
-<input type="submit"/>
-</form>
+    {% csrf_token %}
+    <input type="text" name="url" />
+    <input type="submit"/>
+    </form>
+    <button><a href="{% url 'excel' %}">엑셀</a></button>

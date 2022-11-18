@@ -13,10 +13,10 @@ def url_parse(driver, url, url_list):
     page_num = 1
     driver.get(url)
     while (True):
-        print(page_num)
         try:
-            WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#CategoryProducts > ul > li > div > a")))
-            time.sleep(2)
+               #CategoryProducts > ul > li:nth-child(37)
+            WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#CategoryProducts > ul > li")))
+            time.sleep(1)
             for li in driver.find_elements(By.CSS_SELECTOR, "#CategoryProducts > ul > li._2txbrXXlXM"):
                 url_list += [li.find_element(By.CSS_SELECTOR, "a").get_attribute("href")]
         except :
@@ -30,11 +30,10 @@ def url_parse(driver, url, url_list):
                 nextBtn = driver.find_element(By.CSS_SELECTOR, "a.fAUKm1ewwo._2Ar8-aEUTq")
                 if nextBtn.get_attribute("aria-hidden") == 'false':
                     nextBtn.click()
-                    time.sleep(2)
+                    # time.sleep(2)
             except:
                 driver.quit()
                 return
-                
         WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.UWN4IvaQza")))
         aList = driver.find_elements(By.CSS_SELECTOR, "a.UWN4IvaQza")
         # if page_num != 0:

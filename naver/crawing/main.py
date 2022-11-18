@@ -27,13 +27,10 @@ def crawing(url):
     excelFunc.set_category(category)
     url_list = []
 
-    wb = xl.load_workbook('./naver/crawing/excel/naver.xlsx')
-    sheet = wb["일괄등록"]
-    sheet.delete_rows(3,1000)
-
     urlParse.url_parse(driver, url, url_list)
 
+    print(len(url_list))
     for idx, detail_url in enumerate(url_list):
-        setData.goods_details(driver, detail_url, delivery, origin_area, category, sheet, idx + 3)
-
-    wb.save("./test.xlsx")
+        print(idx)
+        setData.goods_details(driver, detail_url, delivery, origin_area, category)
+    # setData.goods_details(driver, "https://brand.naver.com/poled/products/6153167043", delivery, origin_area, category)
