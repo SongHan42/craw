@@ -1,17 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .crawing import main
-from .crawing import excelFunc
+from .crawling import main
+from .crawling import excelFunc
 
 # Create your views here.
 
 def index(request):
     return render(request, 'naver/index.html')
 
-def crawing(request):
-    main.crawing(request.POST['url'])
-    # main.crawing()
+def crawling(request):
+    main.crawling(request.POST['url'])
+    # main.crawling()
     # return "hi"
     return HttpResponseRedirect(reverse('index'))
 
