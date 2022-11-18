@@ -109,7 +109,6 @@ def set_option(driver, wait, data, product):
         direct_input_option.text = input.text
         direct_input_option.save()
 
-    product.option_type = "단독형"
     option_button = driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > a')
     if len(option_button) == 0:
         return
@@ -141,6 +140,8 @@ def set_option(driver, wait, data, product):
             option_name.product = product
             option_name.name = op.text
             option_name.save()
+            if product.option_type != "조합형":
+                product.option_type = "단독형"
 
             values = (utils.remove_price(select_text))
             prices = [utils.only_num_price(price) for price in select_text]
@@ -161,24 +162,13 @@ def set_option(driver, wait, data, product):
         if check != 1:
             op.click()
 
-    option_names = product.optionname_set.all()
-    if product.option_type == "조합형":
-        for option_name in option_names:
-            options = option_name.option_set.all()
-            for option in options:
-                option_stock_num = OptionStockNum()
-                option_stock_num.option = option
-                option_stock_num.num = 1
-                option_stock_num.save()
-    else:
-        if option_names:
-            options = option_names[0].option_set.all()
-            for option in options:
-                option_stock_num = OptionStockNum()
-                option_stock_num.option = option
-                option_stock_num.num = 1
-                option_stock_num.save()
-
+    if product.option_type != "":
+        options = product.optionname_set.all()[0].option_set.all()
+        for option in options:
+            option_stock_num = OptionStockNum()
+            option_stock_num.option = option
+            option_stock_num.num = 1
+            option_stock_num.save()
 
 def set_table(driver, data, delivery, origin_area, product):
     for div in driver.find_elements(By.CSS_SELECTOR, "#INTRODUCE > div > div"):
