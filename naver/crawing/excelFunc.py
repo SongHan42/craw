@@ -67,7 +67,7 @@ def db_to_xl():
         option_price_str = ""
         option_stock_num_str = ""
         for o_name in option_name:
-            option_name_str += o_name.name
+            option_name_str += o_name.name + "\n"
             option = o_name.option_set.all()
             for o in option:
                 option_stock_num = o.optionstocknum_set.all()
@@ -120,9 +120,9 @@ def db_to_xl():
         sheet.cell(row = count, column = 21).value = p.brand
         sheet.cell(row = count, column = 22).value = p.manufacturer
         if p.manufacturing_date:
-            sheet.cell(row = count, column = 23).value = p.manufacturing_date.strftime("%Y-%M-%D") #확인필요
+            sheet.cell(row = count, column = 23).value = p.manufacturing_date #확인필요
         if p.effective_date:
-            sheet.cell(row = count, column = 24).value = p.effective_date.strftime("%Y-%M-%D") #확인필요
+            sheet.cell(row = count, column = 24).value = p.effective_date #확인필요
         sheet.cell(row = count, column = 25).value = p.origin_code
         sheet.cell(row = count, column = 26).value = p.importer
         
@@ -186,7 +186,7 @@ def db_to_xl():
             sheet.cell(row = count, column = 76).value = b.ISBN
             sheet.cell(row = count, column = 77).value = b.ISSN
             sheet.cell(row = count, column = 78).value = b.is_independent_publication
-            sheet.cell(row = count, column = 79).value = b.publication_date.strftime("%Y-%M-%D")
+            sheet.cell(row = count, column = 79).value = b.publication_date
             sheet.cell(row = count, column = 80).value = b.publisher
             sheet.cell(row = count, column = 81).value = b.writer
             sheet.cell(row = count, column = 82).value = b.painter
