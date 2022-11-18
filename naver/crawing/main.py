@@ -32,7 +32,5 @@ def crawing(url):
     print(len(url_list))
     for idx, detail_url in enumerate(url_list):
         print(idx)
-        if (idx == 40):
-            break
         setData.goods_details(driver, detail_url, delivery, origin_area, category)
     # setData.goods_details(driver, "https://brand.naver.com/poled/products/7034559916", delivery, origin_area, category)
