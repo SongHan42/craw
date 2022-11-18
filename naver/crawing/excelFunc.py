@@ -115,6 +115,8 @@ def db_to_xl():
         sheet.cell(row = count, column = 19).value = sub_img_str[:-1]
         # 상세설명
         # sheet.cell(row = count, column = 20).value = 
+        sheet.cell(row = count, column = 20).value = "1"
+
         sheet.cell(row = count, column = 21).value = p.brand
         sheet.cell(row = count, column = 22).value = p.manufacturer
         if p.manufacturing_date:
