@@ -109,6 +109,7 @@ def set_option(driver, wait, data, product):
         direct_input_option.text = input.text
         direct_input_option.save()
 
+    product.option_type = ""
     option_button = driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > a')
     if len(option_button) == 0:
         return
