@@ -2,4 +2,4 @@ craw.pem
 test.xlsx
 .DS_Store
 chromedriver
-*__pycache__
+*.pyc
