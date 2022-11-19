@@ -2,7 +2,7 @@ import openpyxl as xl
 from ..models import *
 
 def set_delivery(delivery):
-    wb = xl.load_workbook('./naver/crawing/excel/delivery.xlsx')
+    wb = xl.load_workbook('./naver/crawling/excel/delivery.xlsx')
     for sheet_nm in wb.sheetnames:
         sheet = wb[sheet_nm]
         for row_data in sheet.iter_rows(min_row=2):
@@ -10,7 +10,7 @@ def set_delivery(delivery):
     wb.close()
 
 def set_origin(origin_area):
-    wb = xl.load_workbook('./naver/crawing/excel/originarea.xlsx')
+    wb = xl.load_workbook('./naver/crawling/excel/originarea.xlsx')
     for sheet_nm in wb.sheetnames:
         sheet = wb[sheet_nm]
         for row_data in sheet.iter_rows(min_row=2):
@@ -18,7 +18,7 @@ def set_origin(origin_area):
     wb.close()
 
 def set_category(category):
-    wb = xl.load_workbook('./naver/crawing/excel/category.xlsx')
+    wb = xl.load_workbook('./naver/crawling/excel/category.xlsx')
     for sheet_nm in wb.sheetnames:
         sheet = wb[sheet_nm]
         for row_data in sheet.iter_rows(min_row = 2):
@@ -43,7 +43,7 @@ def set_category(category):
 #             sheet.cell(row=row_count, column=idx + 1).value = data[key]
 
 def db_to_xl():
-    wb = xl.load_workbook('./naver/crawing/excel/naver.xlsx')
+    wb = xl.load_workbook('./naver/crawling/excel/naver.xlsx')
     sheet = wb["일괄등록"]
     sheet.delete_rows(3,1000)
 

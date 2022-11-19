@@ -7,7 +7,7 @@ import openpyxl as xl
 import os
 from webdriver_manager.chrome import ChromeDriverManager
 
-def crawing(url):
+def crawling(url):
     # s = Service('./naver/crawing/chromedriver') # Windows는 chromedriver.exe로 변경
     
     chrome_options = webdriver.ChromeOptions()
