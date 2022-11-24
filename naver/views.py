@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .crawling import main
 from .crawling import excelFunc
+from django.core.files.storage import default_storage
 
 # Create your views here.
 
@@ -17,4 +18,10 @@ def crawling(request):
 
 def excel(request):
     excelFunc.db_to_xl()
+    return HttpResponseRedirect(reverse('index'))
+
+def fileUpload(request):
+    for img in request.FILES.getlist('files'):
+        path = default_storage.save('static/naver/img/' + str(img), img)
+        print(path)
     return HttpResponseRedirect(reverse('index'))
