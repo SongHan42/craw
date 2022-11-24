@@ -22,7 +22,7 @@ class Shipping(models.Model):
         ("선결제", "prepayment"),
         ("착불 또는 선결제", "all")
     )
-
+    
     cost_template_code = models.IntegerField(null = True)
     type = models.CharField(max_length = 30, null = True, choices = Type)
     courier_code = models.IntegerField(null = True)
@@ -168,6 +168,6 @@ class AdditionalProductDetail(models.Model):
     price = models.IntegerField()
     num = models.IntegerField()
 
-class SubImg(models.Model):
-    product = models.ForeignKey(Product, on_delete = models.CASCADE)
-    img = models.CharField(max_length = 255)
+# class SubImg(models.Model):
+    # product = models.ForeignKey(Product, on_delete = models.CASCADE)
+    # img = models.CharField(max_length = 255)

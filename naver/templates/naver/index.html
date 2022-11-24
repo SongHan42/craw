@@ -1,6 +1,16 @@
+<div class="container"></div>
 <form action="{% url 'crawling' %}" method="post">
   {% csrf_token %}
   <input type="text" name="url" />
+  <input type="submit" />
+</form>
+<form
+  method="POST"
+  action="{% url 'fileupload' %}"
+  enctype="multipart/form-data"
+>
+  {% csrf_token %}
+  <input type="file" name="files" multiple />
   <input type="submit" />
 </form>
 <button><a href="{% url 'excel' %}">엑셀</a></button>
