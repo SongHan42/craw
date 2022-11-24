@@ -3,3 +3,4 @@ test.xlsx
 .DS_Store
 chromedriver
 *.pyc
+static/
