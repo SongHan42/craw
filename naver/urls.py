@@ -11,5 +11,7 @@ urlpatterns = [
     path('shippingAdd/save/<int:shipping_id>', views.shippingSave, name='shippingSave'),
     path('shipping/<int:shipping_id>', views.shippingDetail, name='shippingDetail'),
     path('shipping/del/<int:shipping_id>', views.shippingDel, name='shippingDel'),
-    path('fileupload', views.fileUpload, name="fileupload")
+    path('fileupload', views.fileUpload, name="fileupload"),
+    path('product', views.ProductListView.as_view(), name="product"),
+    path('product/<int:id>', views.detailView, name="product_detail"),
 ]

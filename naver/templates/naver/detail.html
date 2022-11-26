@@ -1,0 +1,167 @@
+<form method="POST" action="{% url 'product_detail' product.id %}">
+    {% csrf_token %}
+    <ul>
+        <li>상품 이름: <input type="text" name="name" value="{{ product.product_name }}" ></li>
+        <li>상품 상태:
+            {% if product.product_state == "신상품" %}
+            <input type="radio" name="state" value="신상품" checked> <label>신상품</label>
+            <input type="radio" name="state" value="중고상품"> <label>중고상품</label>
+            {% else %}
+            <input type="radio" name="state" value="신상품"> <label>신상품</label>
+            <input type="radio" name="state" value="중고상품" checked> <label>중고상품</label>
+            {% endif %}
+        </li>
+        <li>가격: <input type="number" name="price" value="{{ product.product_price }}"></li>
+        <li>
+            부가세: 
+            {% if product.vat == "" or product.vat == "과세상품" %}
+            <input type="radio" name="vat" value="과세상품" checked>
+            {% else %}
+            <input type="radio" name="vat" value="과세상품">
+            {% endif %}
+            <label>과세상품</label>
+            {% if product.vat == "면세상품" %}
+            <input type="radio" name="vat" value="면세상품" checked>
+            {% else %}
+            <input type="radio" name="vat" value="면세상품">
+            {% endif %}
+            <label>면세상품</label>
+            {% if product.vat == "영세상품" %}
+            <input type="radio" name="vat" value="영세상품" checked>
+            {% else %}
+            <input type="radio" name="vat" value="영세상품">
+            {% endif %}
+            <label>영세상품</label>
+        </li>
+        <li>재고수량: <input type="number" name="stock_num" value={{ product.stock_num }}></li>
+        <li>
+            옵션형태: 
+            {% if product.option_type == "" %}
+            <input type="radio" name="option_type" value="" checked>
+            {% else %}
+            <input type="radio" name="option_type" value="">
+            {% endif %}
+            <label>없음</label>
+            {% if product.option_type == "단독형" %}
+            <input type="radio" name="option_type" value="단독형" checked>
+            {% else %}
+            <input type="radio" name="option_type" value="단독형">
+            {% endif %}
+            <label>단독형</label>
+            {% if product.option_type == "조합형" %}
+            <input type="radio" name="option_type" value="조합형" checked>
+            {% else %}
+            <input type="radio" name="option_type" value="조합형">
+            {% endif %}
+            <label>조합형</label>
+        </li>
+        <!--  
+        <li>{{ product.main_img }}</li>
+        {% for img in product.subimg_set.all %}
+        <li>{{ img.img }}</li>
+        {% endfor %}
+        -->
+        <!-- <li>브랜드: <input type="text" name="brand" value={{ product.brand }}></li> -->
+        <!-- <li>제조사: <input type="text" name="manufacturing" value="{{ product.manufacturer }}"></li> -->
+        <!-- <li>제조일자: <input type="date" name="manufaturing_date" value="{{ product.manufacturing_date|date:"Y-m-d" }}"></li> -->
+        <!-- <li>유효일자: <input type="date" name="effective_date" value="{{ product.effective_date|date:"Y-m-d" }}"></li> -->
+        <!-- <li>{{ product.origin_code }}</li> -->
+        <!-- <li>{{ product.importer }}</li> -->
+        <!-- <li>{{ product.is_plural_origin }}</li> -->
+        <!-- <li>{{ product.origin_direct_input }}</li> -->
+        <li>택배: {{ product.shipping }}</li>
+        <!-- <li>{{ product.info_template_code }}</li> -->
+        <!-- <li>상품정보제공시 품명: <input type="text" name="info_name" value="{{ product.info_name }}"></li> -->
+        <!-- <li>상품정보제공시 모델명: <input type="text" name="info_model_name" "value={{ product.info_model_name }}"></li> -->
+        <!-- <li>상품정보제공시 인증허가사항: <input type="text" name="info_authoriztion" value="{{ product.info_authorization }}"></li> -->
+        <!-- <li>상품정보제공시 제조자: <input type="text" name="info_manufacturer" value="{{ product.info_manufacturer }}"></li> -->
+        <li>PC 즉시할인 값: <input type="text" name="pc_instant_discount_value" value="{{ product.pc_instant_discount_value }}"></li>
+        <li>PC 즉시할인 단위: 
+            {% if product.pc_instant_discount_unit == "원" %}
+            <input type="radio" name="pc_instant_discount_unit" value="원" checked>
+            {% else %}
+            <input type="radio" name="pc_instant_discount_unit" value="원">
+            {% endif %}
+            <label>원</label>
+            {% if product.pc_instant_discount_unit == "%" %}
+            <input type="radio" name="pc_instant_discount_unit" value="%" checked>
+            {% else %}
+            <input type="radio" name="pc_instant_discount_unit" value="%">
+            {% endif %}
+            <label>%</label>
+        </li>
+        <li>모바일 즉시할인 값: <input type="text" name="mobile_instant_discount_value" value="{{ product.mobile_instant_discount_value }}"></li>
+        <li>모바일 즉시할인 단위:
+            {% if product.mobile_instant_discount_unit == "원" %}
+            <input type="radio" name="mobile_instant_discount_unit" value="원" checked>
+            {% else %}
+            <input type="radio" name="mobile_instant_discount_unit" value="원">
+            {% endif %}
+            <label>원</label>
+            {% if product.mobile_instant_discount_unit == "%" %}
+            <input type="radio" name="mobile_instant_discount_unit" value="%" checked>
+            {% else %}
+            <input type="radio" name="mobile_instant_discount_unit" value="%">
+            {% endif %}
+            <label>%</label>
+        </li>
+        <li>복수구매할인 조건 값 <input type="text" name="multiple_purchase_discount_condition_value" value="{{ product.multiple_purchase_discount_condition_value }}"></li>
+        <li>복수구매할인 조건 단위
+            {% if product.multiple_purchase_discount_condition_unit == "개" %}
+            <input type="radio" name="multiple_purchase_discount_condition_unit" value="개" checked>
+            {% else %}
+            <input type="radio" name="multiple_purchase_discount_condition_unit" value="개">
+            {% endif %}
+            <label>개</label>
+            {% if product.multiple_purchase_discount_condition_unit == "원" %}
+            <input type="radio" name="multiple_purchase_discount_condition_unit" value="원" checked>
+            {% else %}
+            <input type="radio" name="multiple_purchase_discount_condition_unit" value="원">
+            {% endif %}
+            <label>원</label>
+        </li>
+        <li>복수구매할인 값: <input type="text" name="multiple_purchase_discount_value" value="{{ product.multiple_purchase_discount_value }}"></li>
+        <li>
+            복수구매할인 단위:
+            {% if product.multiple_purchase_discount_unit == "원" %}
+            <input type="radio" name="multiple_purchase_discount_unit" value="원" checked>
+            {% else %}
+            <input type="radio" name="multiple_purchase_discount_unit" value="원">
+            {% endif %}
+            <label>원</label>
+            {% if product.multiple_purchase_discount_unit == "%" %}
+            <input type="radio" name="multiple_purchase_discount_unit" value="%" checked>
+            {% else %}
+            <input type="radio" name="multiple_purchase_discount_unit" value="%">
+            {% endif %}
+            <label>%</label>
+        </li>
+        <li>무이자 할부 개월: <input type="text" name="interset_free_installment_month" value="{{ product.interset_free_installment_month }}"></li>
+        <li>사은품: <input type="text" name="gift" value="{{ product.gift }}"></li>
+        <li>구매평 노출 여부:
+            {% if product.review_exposure_state == "Y" %}
+            <input type="radio" name="review_exposure_state" value="True" checked>
+            {% else %}
+            <input type="radio" name="review_exposure_state" value="True">
+            {% endif %}
+            <label>노출</label>
+            {% if product.review_exposure_state == "N" or not product.review_exposure_state %}
+            <input type="radio" name="review_exposure_state" value="False" checked>
+            {% else %}
+            <input type="radio" name="review_exposure_state" value="False">
+            {% endif %}
+            <label>노출 안함</label>
+        </li>
+        <li>구매평 비노출사유: <input type="text" name="review_non_exposure_reson" value="{{ product.review_non_exposure_reson }}"></li>
+        {% with after_service=product.afterservice_set.get %}
+        <!-- <li>A/S 템플릿코드: <input type="number" name="after_service_template_code" value="{{after_service.tepmlate_code}}"></li> -->
+        <li>A/S 전화번호: <input type="text" name="after_service_phone_number" value="{{after_service.phone_number}}"></li>
+        <li>A/S 안내: <input type="text" name="after_service_announcement" value="{{after_service.announcement}}"></li>
+        <li>판매자 특이사항: <input type="text" name="after_service_seller_specifics" value="{{after_service.seller_specifics}}"></li>
+        {% endwith %}
+        <!-- {% for after_service in product.afterservice_set.all %}
+        {{ after_service.phone_number }} -->
+        <!-- {% endfor %} -->
+    </ul>
+    <input type="submit" value="수정">
+</form>
