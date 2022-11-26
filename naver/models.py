@@ -168,6 +168,6 @@ class AdditionalProductDetail(models.Model):
     price = models.IntegerField()
     num = models.IntegerField()
 
-# class SubImg(models.Model):
-    # product = models.ForeignKey(Product, on_delete = models.CASCADE)
-    # img = models.CharField(max_length = 255)
+class SubImg(models.Model):
+    product = models.ForeignKey(Product, on_delete = models.CASCADE)
+    img = models.CharField(max_length = 255)
