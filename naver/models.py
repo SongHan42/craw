@@ -4,31 +4,35 @@ from django.db import models
 # Create your models here.
 
 class Shipping(models.Model):
-    Type = (
-        ("택배, 소포, 등기", "delivery"),
-        ("직접배송(화물배달)", "direct_delivery")
-    )
+    # Type = (
+    #     ("택배, 소포, 등기", "delivery"),
+    #     ("직접배송(화물배달)", "direct_delivery")
+    # )
 
-    CostType = (
-        ("무료", "free"),
-        ("조건부 무료", "conditionally_free"),
-        ("유료", "charged"),
-        ("수량별", "by_quantity"),
-        ("구간별", "by_section")
-    )
+    # CostType = (
+    #     ("무료", "free"),
+    #     ("조건부 무료", "conditionally_free"),
+    #     ("유료", "charged"),
+    #     ("수량별", "by_quantity"),
+    #     ("구간별", "by_section")
+    # )
 
-    CostPaymentType = (
-        ("착불", "pay_on_delivery"),
-        ("선결제", "prepayment"),
-        ("착불 또는 선결제", "all")
-    )
-    
+    # CostPaymentType = (
+    #     ("착불", "pay_on_delivery"),
+    #     ("선결제", "prepayment"),
+    #     ("착불 또는 선결제", "all")
+    # )
+    title = models.CharField(max_length = 200, default="")
     cost_template_code = models.IntegerField(null = True)
-    type = models.CharField(max_length = 30, null = True, choices = Type)
-    courier_code = models.IntegerField(null = True)
-    cost_type = models.CharField(max_length = 10, null = True, choices = CostType)
+    # type = models.CharField(max_length = 30, null = True, choices = Type)
+    type = models.CharField(max_length = 30, null = True)
+    courier_code = models.CharField(max_length = 30,null = True)
+    # cost_type = models.CharField(max_length = 10, null = True, choices = CostType)
+    cost_type = models.CharField(max_length = 10, null = True)
     default_cost = models.IntegerField(null = True)
-    cost_payment_type = models.CharField(max_length = 10, null = True, choices = CostPaymentType)
+    cost_payment_type = models.CharField(max_length = 10, null = True)
+    # cost_payment_type = models.CharField(max_length = 10, null = True, choices = CostPaymentType)
+    
     # "조건부무료-
     # 상품판매가 합계"	수량별부과-수량	"구간별-
     # 2구간수량"	"구간별-
@@ -168,6 +172,6 @@ class AdditionalProductDetail(models.Model):
     price = models.IntegerField()
     num = models.IntegerField()
 
-# class SubImg(models.Model):
-    # product = models.ForeignKey(Product, on_delete = models.CASCADE)
-    # img = models.CharField(max_length = 255)
+class SubImg(models.Model):
+    product = models.ForeignKey(Product, on_delete = models.CASCADE)
+    img = models.CharField(max_length = 255)

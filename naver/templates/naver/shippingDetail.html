@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+  </head>
+  <style type="text/css">
+    .content {
+      max-width: 500px;
+      margin: auto;
+      padding: 10px;
+    }
+
+    .reply_content {
+      text-align: right;
+    }
+
+    .reply_content .reply {
+      border-radius: 0.5em;
+      display: block;
+      margin: 4px;
+      padding: 3px 10px;
+    }
+
+    .shipping_for_read {
+      width: 100%;
+      background-color: #f1f1f1;
+    }
+
+    #title {
+      height: 32px;
+      width: 100%;
+      border-radius: 0.5em;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+      background: none;
+    }
+
+    textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 100%;
+      resize: none;
+      border-radius: 0.5em;
+      padding-block: 10px;
+      border: 0px;
+      background: none;
+    }
+
+    .td_title {
+      background-color: #d8d8d8;
+    }
+  </style>
+  <body>
+    <div class="content">
+      <div class="header">
+        <h2>Shipping Detail</h2>
+      </div>
+      <div style="text-align: right">
+        <a href="{% url 'shippingUpdate' shipping.id %}">수정</a>
+      </div>
+      <table class="shipping_for_read">
+        <tbody>
+          <tr>
+            <td class="td_title" style="text-align: center; width: 20%">
+              제목
+            </td>
+            <td style="padding: 10px">
+              <input
+                type="text"
+                name="title"
+                id="title"
+                value="{{ shipping.title }}"
+                readonly
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="td_title" style="text-align: center; width: 20%">
+              템플릿 코드
+            </td>
+            <td style="padding: 10px">
+              <span>{{ shipping.cost_template_code }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="td_title" style="text-align: center; width: 20%">
+              택배 타입
+            </td>
+            <td style="padding: 10px">
+              <span>{{ shipping.type }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="td_title" style="text-align: center; width: 20%">
+              택배사
+            </td>
+            <td style="padding: 10px">
+              <span>{{ shipping.courier_code }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="td_title" style="text-align: center; width: 20%">
+              배송비 유형
+            </td>
+            <td style="padding: 10px">
+              <span>{{ shipping.cost_type }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="td_title" style="text-align: center; width: 20%">
+              기본 배송료
+            </td>
+            <td style="padding: 10px">
+              <span>{{ shipping.default_cost }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="text-align: left">
+        <a href="{% url 'shippingList' %}">> List</a>
+      </div>
+      <div style="text-align: right">
+        <a href="{% url 'shippingDel' shipping.id %}">삭제</a>
+      </div>
+    </div>
+  </body>
+</html>
