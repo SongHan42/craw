@@ -192,4 +192,4 @@ def db_to_xl():
             sheet.cell(row = count, column = 82).value = b.painter
             sheet.cell(row = count, column = 83).value = b.translator
             sheet.cell(row = count, column = 84).value = b.is_cultural_expenses_income_tax_deduction
-    wb.save("./test.xlsx")
+    wb.save("./static/naver.xlsx")
