@@ -1,5 +1,6 @@
 from sre_constants import MAX_UNTIL
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
@@ -78,6 +79,7 @@ class Product(models.Model):
     option_type = models.CharField(max_length = 10, default="")
     main_img = models.CharField(max_length = 255)
     # 상세설명 = ""
+    detail_descript = RichTextUploadingField(blank=True,null=True)
     brand = models.CharField(max_length = 50, default="")
     manufacturer = models.CharField(max_length = 50, default="")
     manufacturing_date = models.DateField(null = True)
