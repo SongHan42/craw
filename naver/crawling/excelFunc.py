@@ -113,7 +113,7 @@ def db_to_xl():
         for sub_img in sub_imgs:
             sub_img_str += sub_img.img + "\n"
         sheet.cell(row = count, column = 19).value = sub_img_str[:-1]
-        # 상세설명
+        # 
         # sheet.cell(row = count, column = 20).value = 
         sheet.cell(row = count, column = 20).value = "1"
 
