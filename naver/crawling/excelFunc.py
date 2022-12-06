@@ -113,7 +113,7 @@ def db_to_xl():
         for sub_img in sub_imgs:
             sub_img_str += sub_img.img + "\n"
         sheet.cell(row = count, column = 19).value = sub_img_str[:-1]
-        # 상세설명
+        # 
         # sheet.cell(row = count, column = 20).value = 
         sheet.cell(row = count, column = 20).value = "1"
 
@@ -192,4 +192,4 @@ def db_to_xl():
             sheet.cell(row = count, column = 82).value = b.painter
             sheet.cell(row = count, column = 83).value = b.translator
             sheet.cell(row = count, column = 84).value = b.is_cultural_expenses_income_tax_deduction
-    wb.save("./test.xlsx")
+    wb.save("./static/naver.xlsx")

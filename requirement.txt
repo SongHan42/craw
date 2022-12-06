@@ -57,3 +57,5 @@ w3lib==2.0.1
 webdriver-manager==3.8.5
 wsproto==1.2.0
 zope.interface==5.4.0
+webdriver-manager==3.8.5
+django-ckeditor==6.5.1

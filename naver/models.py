@@ -1,5 +1,6 @@
 from sre_constants import MAX_UNTIL
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
@@ -77,16 +78,15 @@ class Product(models.Model):
     # 이미지
     # main_img = models.CharField(max_length = 255, verbose_name="대표이미지")
     main_img = models.ImageField(verbose_name="대표이미지")
-    # 상세설명 = ""
-    brand = models.CharField(max_length = 50, default="", blank=True, verbose_name="브랜드")
-    manufacturer = models.CharField(max_length = 50, default="", blank=True, verbose_name="제조사")
-    manufacturing_date = models.DateField(null = True, blank=True, verbose_name="제조일자")
-    effective_date = models.DateField(null = True, blank=True, verbose_name="유효일자")
-
-    origin_code = models.CharField(max_length=10, verbose_name="원산지")
-    importer = models.CharField(max_length = 50, default="", blank=True, verbose_name="수입사")
-    is_plural_origin = models.BooleanField(default=False, verbose_name="복수원산지여부")
-    origin_direct_input = models.CharField(max_length = 50, default="", blank=True, verbose_name="원산지 직접입력")
+    detail_description = RichTextUploadingField(blank=True,null=True)
+    brand = models.CharField(max_length = 50, default="")
+    manufacturer = models.CharField(max_length = 50, default="")
+    manufacturing_date = models.DateField(null = True)
+    effective_date = models.DateField(null = True)
+    origin_code = models.CharField(max_length=10)
+    importer = models.CharField(max_length = 50)
+    is_plural_origin = models.BooleanField(default=False)
+    origin_direct_input = models.CharField(max_length = 50, default="")
     # is_minor = models.BooleanField()
     shipping = models.ForeignKey(Shipping, on_delete = models.SET_NULL, null = True, blank=True, verbose_name="택배")
     # info_template_code = models.IntegerField(null = True)
