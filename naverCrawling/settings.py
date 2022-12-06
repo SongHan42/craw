@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'nested_inline',
     'naver.apps.NaverConfig',
     'django.contrib.admin',
     'django.contrib.auth',
