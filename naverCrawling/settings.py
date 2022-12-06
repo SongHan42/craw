@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'nested_inline',
     'ckeditor',
     'ckeditor_uploader',
     'naver.apps.NaverConfig',
