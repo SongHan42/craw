@@ -79,7 +79,7 @@ class Product(models.Model):
     option_type = models.CharField(max_length = 10, default="")
     main_img = models.CharField(max_length = 255)
     # 상세설명 = ""
-    detail_descript = RichTextUploadingField(blank=True,null=True)
+    detail_description = RichTextUploadingField(blank=True,null=True)
     brand = models.CharField(max_length = 50, default="")
     manufacturer = models.CharField(max_length = 50, default="")
     manufacturing_date = models.DateField(null = True)

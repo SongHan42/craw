@@ -7,6 +7,7 @@ import datetime
 from . import utils
 from ..models import *
 import time
+from selenium.common.exceptions import NoSuchElementException
 
 def save_imgs(data, imgs_url, product):
     #동영상은 대기하세요~~
@@ -171,22 +172,62 @@ def set_option(driver, wait, data, product):
             option_stock_num.num = 1
             option_stock_num.save()
 
+def edit_detail_d(img_html_list, tmp):
+    output = ""
+    i = 0
+    for enter_line in tmp.split('\n'):
+        if enter_line.startswith('<div><img alt="" class="se-image-resource" src='):
+            enter_line = img_html_list[i]
+            i = i + 1
+        output += enter_line
+    return (output)
+
+
 def set_table(driver, data, delivery, origin_area, product):
     for div in driver.find_elements(By.CSS_SELECTOR, "#INTRODUCE > div > div"):
         if div.get_attribute("class") != "":
             for tr in div.find_elements(By.CSS_SELECTOR, "tr"):
                 add_data(tr, data, delivery, origin_area, product)
         else:
-            main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div")
-            for detail in main_div:
-                if detail.text:
-                    data["상세설명"] += detail.text + "\n"
-                else:
-                    img = div.find_element(By.CSS_SELECTOR, "img")
-                    src = img.get_attribute("data-src")
-                    if src and src.find("video") == -1 and src.find("data:image") == -1:
-                        data["상세설명"] += '<img src="' + img.get_attribute("data-src") + '">\n'
+            detail_descript = ""
+            img_html_list = []
+            for img in div.find_elements(By.CSS_SELECTOR, "img"):
+                data_src = img.get_attribute("data-src")
+                if data_src.find("video-phinf") == -1:
+                    img_html_list.append(f'<div><img alt="" class="se-image-resource" src="{data_src}" /></div>\n')
+                    # data["상세설명"] += f'<img src="{data_src}" />\n'
 
+            main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
+            for detail in main_div:
+                # print(detail.text)
+                tmp = detail.find_elements(By.CSS_SELECTOR, "img")
+                if tmp:
+                    detail_descript += f'<img src="{tmp[0].get_attribute("data-src")}" />\n'
+                else:
+                    detail_descript += detail.get_attribute("outerHTML")
+                # tmp += detail.get_attribute("outerHTML")
+                    # data["상세설명"] += detail.get_attribute("outerHTML")
+            
+            # for img in div.find_elements(By.CSS_SELECTOR, "img"):
+            #     data_src = img.get_attribute("data-src")
+            #     if data_src.find("video-phinf") == -1:
+            #         data["상세설명"] += f'<img src="{data_src}" />\n'
+                    
+            # main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div")
+            # for detail in div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div"):
+            #     if detail.text:
+            #         data["상세설명"] += detail.text + "\n"
+            #     else:
+            #         img = div.find_element(By.CSS_SELECTOR, "img")
+            #         src = img.get_attribute("data-src")
+            #         if src and src.find("video") == -1 and src.find("data:image") == -1:
+            #             data["상세설명"] += '<img src="' + img.get_attribute("data-src") + '">\n'
+
+    # for t in img_html_list:
+    #     print(t)
+    #     print("----==============")
+    # print(tmp)
+    data["상세설명"] = detail_descript
     for tr in driver.find_elements(By.CSS_SELECTOR, "#RETURNPOLICY > div > table > tbody > tr"):
         add_data(tr, data, delivery, origin_area, product)
     for tr in driver.find_elements(By.CSS_SELECTOR, "#content > div > div.z7cS6-TO7X > div.etc > div._1aH4b0l27f > div._211Avwm-sU > table > tbody > tr"):
@@ -212,6 +253,9 @@ def save_db(data, product):
         product.info_authorization = data["상품정보제공시\n인증허가사항"]
     if data.get("상품정보제공시\n제조자"):
         product.info_manufacturer = data["상품정보제공시\n제조자"]
+    product.detail_description = data["상세설명"]
+    # print(data["상세설명"])
+    # print(product.detail_description)
     product.save()
 
     after_service = AfterService()
