@@ -16,7 +16,7 @@ def url_parse(driver, url, url_list):
         try:
                #CategoryProducts > ul > li:nth-child(37)
             WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#CategoryProducts > ul > li")))
-            time.sleep(1)
+            time.sleep(2)
             for li in driver.find_elements(By.CSS_SELECTOR, "#CategoryProducts > ul > li._2txbrXXlXM"):
                 url_list += [li.find_element(By.CSS_SELECTOR, "a").get_attribute("href")]
         except :

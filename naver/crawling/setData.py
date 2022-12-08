@@ -35,7 +35,7 @@ def save_imgs(data, imgs_url, product):
 def parse_script(driver, category_dict, product):
     wait = WebDriverWait(driver,20)
     wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'script')))
-    time.sleep(1)
+    time.sleep(2)
 
     json_object = ""
     for script in driver.find_elements(By.CSS_SELECTOR, "script"):
@@ -68,12 +68,12 @@ def add_data(tr, data, delivery, origin_area, product):
         # elif key == "판매자 지정택배사":
         #     data["택배사코드"] = delivery[td[i].text]
         elif key == "원산지":
-            area = td[i].text.split(" ")[-1].split(")")[0]
-            if origin_area.get(area):
-                product.origin_code = origin_area[area]
-            else:
-                product.origin_code = "04"
-                product.origin_direct_input = td[i].text
+            # area = td[i].text.split(" ")[-1].split(")")[0]
+            # if origin_area.get(area):
+            #     product.origin_code = origin_area[area]
+            # else:
+            product.origin_code = "04"
+            product.origin_direct_input = td[i].text
         # elif key == "반품배송비":
         #     if td[i].text != "무료":
         #         data["반품배송비"] = td[i].text.split(" ")[1].replace(",", "").replace("원","")
@@ -190,11 +190,11 @@ def set_table(driver, data, delivery, origin_area, product):
                 add_data(tr, data, delivery, origin_area, product)
         else:
             detail_descript = ""
-            img_html_list = []
-            for img in div.find_elements(By.CSS_SELECTOR, "img"):
-                data_src = img.get_attribute("data-src")
-                if data_src.find("video-phinf") == -1:
-                    img_html_list.append(f'<div><img alt="" class="se-image-resource" src="{data_src}" /></div>\n')
+            # img_html_list = []
+            # for img in div.find_elements(By.CSS_SELECTOR, "img"):
+            #     data_src = img.get_attribute("data-src")
+            #     if data_src.find("video-phinf") == -1:
+            #         img_html_list.append(f'<div><img alt="" class="se-image-resource" src="{data_src}" /></div>\n')
                     # data["상세설명"] += f'<img src="{data_src}" />\n'
 
             main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
@@ -202,7 +202,8 @@ def set_table(driver, data, delivery, origin_area, product):
                 # print(detail.text)
                 tmp = detail.find_elements(By.CSS_SELECTOR, "img")
                 if tmp:
-                    detail_descript += f'<img src="{tmp[0].get_attribute("data-src")}" />\n'
+                    for imgTag in tmp:
+                        detail_descript += f'<img src="{imgTag.get_attribute("data-src")}" />\n'
                 else:
                     detail_descript += detail.get_attribute("outerHTML")
                 # tmp += detail.get_attribute("outerHTML")
@@ -247,12 +248,12 @@ def save_db(data, product):
         product.is_plural_origin = data["복수원산지여부"]
     if data.get("상품정보제공고시\n품명"):
         product.info_name = data["상품정보제공고시\n품명"]
-    if data.get("상품정보제공시\n모델명"):
-        product.info_model_name = data["상품정보제공시\n모델명"]
-    if data.get("상품정보제공시\n인증허가사항"):
+    if data.get("상품정보제공고시\n모델명"):
+        product.info_model_name = data["상품정보제공고시\n모델명"]
+    if data.get("상품정보제공고시\n인증허가사항"):
         product.info_authorization = data["상품정보제공시\n인증허가사항"]
-    if data.get("상품정보제공시\n제조자"):
-        product.info_manufacturer = data["상품정보제공시\n제조자"]
+    if data.get("상품정보제공고시\n제조자"):
+        product.info_manufacturer = data["상품정보제공고시\n제조자"]
     product.detail_description = data["상세설명"]
     # print(data["상세설명"])
     # print(product.detail_description)
@@ -291,9 +292,9 @@ def goods_details(driver, url, delivery, origin_area, category):
     wait = WebDriverWait(driver,10)
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#INTRODUCE')))
 
-    product.product_name = driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > h3').text
+    product.name = driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > h3').text
     parse_script(driver, category, product)
-    product.product_price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._1ziwSSdAv8 > div.WrkQhIlUY0 > div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
+    product.price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._1ziwSSdAv8 > div.WrkQhIlUY0 > div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
     product.stock_num = 1
     product.product_state = "신상품"
     product.save()
