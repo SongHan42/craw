@@ -4,7 +4,50 @@ from django.utils.safestring import mark_safe
 from django.contrib import admin
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 
-# Register your models here.
+class OptionStockNumInline(NestedStackedInline):
+    model = OptionStockNum
+    extra = 1
+
+class OptionInline(NestedStackedInline):
+    model = Option
+    inlines = [OptionStockNumInline]
+    extra = 1
+
+class OptionNameInline(NestedStackedInline):
+    model = OptionName
+    inlines = [OptionInline]
+    extra = 1
+
+class DirectInputOptionInline(admin.StackedInline):
+    model = DirectInputOption
+    extra = 0
+
+class AdditionalProductDetailInline(NestedStackedInline):
+    model = AdditionalProductDetail
+    extra = 1
+
+class AdditionalProductNameInline(NestedStackedInline):
+    model = AdditionalProductName
+    inlines = [AdditionalProductDetailInline]
+    extra = 1
+
+class SubImgInline(admin.StackedInline):
+    model = SubImg
+    extra = 1
+
+class BookInline(admin.StackedInline):
+    model = Book
+    extra = 0
+
+@admin.register(Product)
+class ProductAdmin(NestedModelAdmin):
+    inlines = [
+        OptionNameInline,
+        DirectInputOptionInline,
+        AdditionalProductNameInline,
+        SubImgInline,
+        BookInline
+    ]
 
 @admin.register(Shipping)
 class ShippingAdmin(admin.ModelAdmin):
@@ -15,47 +58,16 @@ class ShippingAdmin(admin.ModelAdmin):
         "default_cost"
     )
 
-# class OptionInline(admin.TabularInline):
-#     model = Option
+@admin.register(AfterService)
+class AfterServiceAdmin(admin.ModelAdmin):
+    pass
 
-# class OptionNameInline(admin.TabularInline):
-#     model = OptionName
+# @admin.register(Book)
+# class BookAdmin(admin.ModelAdmin):
+#     pass
 
-#     fields = ["name"]
-#     show_change_link = True
-    
-class OptionInline(NestedStackedInline):
-    model = Option
-    extra = 1
-
-class OptionNameInline(NestedStackedInline):
-    model = OptionName
-    inlines = [OptionInline]
-    extra = 1
-
-@admin.register(Product)
-class ProductAdmin(NestedModelAdmin):
-    inlines = [OptionNameInline]
-
-class SubImgInline(admin.TabularInline):
-    model = SubImg
-
-# @admin.register(Product)
-# class ProductAdmin(admin.ModelAdmin):
-#     inlines = [SubImgInline]
-
-#     list_display = ["name"]
-
-    # fields = ["SubImg.render_image"]
-
-# admin.site.register(Shipping)
-admin.site.register(AfterService)
-# admin.site.register(Product)
-admin.site.register(Book)
-# admin.site.register(OptionName)
-# admin.site.register(Option)
-admin.site.register(OptionStockNum)
-admin.site.register(DirectInputOption)
-admin.site.register(AdditionalProductName)
-admin.site.register(AdditionalProductDetail)
-admin.site.register(SubImg)
+# admin.site.register(OptionStockNum)
+# admin.site.register(DirectInputOption)
+# admin.site.register(AdditionalProductName)
+# admin.site.register(AdditionalProductDetail)
+# admin.site.register(SubImg)
