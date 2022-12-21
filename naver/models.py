@@ -81,7 +81,7 @@ class Product(models.Model):
     stock_num = models.IntegerField(verbose_name="재고수량")
     option_type = models.CharField(max_length = 10, default="", choices=OptionTypeChoices.choices, blank=True, verbose_name="옵션형태")
     # 이미지
-    main_img = models.ImageField(max_length=200, verbose_name="대표이미지")
+    main_img = models.ImageField(max_length=300, verbose_name="대표이미지")
     detail_description = RichTextUploadingField(blank=True,null=True)
     brand = models.CharField(max_length = 50, default="", verbose_name="브랜드")
     manufacturer = models.CharField(max_length = 50, default="", blank=True, verbose_name="제조사")
@@ -169,4 +169,4 @@ class AdditionalProductDetail(models.Model):
 
 class SubImg(models.Model):
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
-    img = models.ImageField(max_length=200)
+    img = models.ImageField(max_length=300)

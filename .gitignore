@@ -4,3 +4,4 @@ test.xlsx
 chromedriver
 *.pyc
 static/
+logs/

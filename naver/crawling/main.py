@@ -29,6 +29,7 @@ def crawling(url):
     excelFunc.set_category(category)
     url_list = []
 
+    print("hi")
     urlParse.url_parse(driver, url, url_list)
 
     print(len(url_list))

@@ -294,7 +294,10 @@ def goods_details(driver, url, delivery, origin_area, category):
 
     product.name = driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > h3').text
     parse_script(driver, category, product)
-    product.price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._1ziwSSdAv8 > div.WrkQhIlUY0 > div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
+    #content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._3k440DUKzy > div.WrkQhIlUY0
+    #content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._3k440DUKzy > div.WrkQhIlUY0 > div > strong > span._1LY7DqCnwR
+    product.price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._3k440DUKzy > div.WrkQhIlUY0 > div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
+    #product.price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div").find_elements(By.CSS_SELECTOR, div)[1].find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
     product.stock_num = 1
     product.product_state = "신상품"
     product.save()
