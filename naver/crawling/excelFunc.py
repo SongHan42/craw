@@ -54,9 +54,9 @@ def db_to_xl():
         # if (b):
         count = idx + 3
         sheet.cell(row = count, column = 2).value = p.category_code
-        sheet.cell(row = count, column = 3).value = p.product_name
-        sheet.cell(row = count, column = 4).value = p.product_state
-        sheet.cell(row = count, column = 5).value = p.product_price
+        sheet.cell(row = count, column = 3).value = p.name
+        sheet.cell(row = count, column = 4).value = p.state
+        sheet.cell(row = count, column = 5).value = p.price
         sheet.cell(row = count, column = 6).value = p.vat
         sheet.cell(row = count, column = 7).value = p.stock_num
         sheet.cell(row = count, column = 8).value = p.option_type

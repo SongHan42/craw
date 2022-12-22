@@ -20,8 +20,6 @@ def index(request):
 
 def crawling(request):
     main.crawling(request.POST['url'])
-    # main.crawling()
-    # return "hi"
     return HttpResponseRedirect(reverse('index'))
 
 def excel(request):

@@ -24,7 +24,7 @@ class Shipping(models.Model):
         PREPAYMENT = "선결제", "선결제"
         ALL = "착불 또는 선결제", "착불 또는 선결제"
     
-    title = models.CharField(max_length = 200, default="", verbose_name="제목")
+    title = models.CharField(max_length = 200, verbose_name="제목")
     # cost_template_code = models.IntegerField(null = True)
     type = models.CharField(max_length = 30, choices=TypeChoices.choices, blank=True, verbose_name="배송방법")
     courier_code = models.CharField(max_length = 30, default="", blank=True, verbose_name="택배사코드")
@@ -67,6 +67,11 @@ class Product(models.Model):
         NUM = "개", "개"
         WON = "원", "원"
 
+    class OptionTypeChoices(models.TextChoices):
+        BLANK = "", ""
+        SOLITARY = "단독형", "단독형"
+        COMBINATION = "조합형", "조합형"
+
     name = models.CharField(max_length = 200, verbose_name="상품명")
     #???????????
     category_code = models.IntegerField(verbose_name="카테고리 코드")
@@ -74,19 +79,18 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name="판매가")
     vat = models.CharField(max_length = 10, default="과세상품", choices=VatChoices.choices, verbose_name="부가세")
     stock_num = models.IntegerField(verbose_name="재고수량")
-    option_type = models.CharField(max_length = 10, default="", blank=True, verbose_name="옵션형태")
+    option_type = models.CharField(max_length = 10, default="", choices=OptionTypeChoices.choices, blank=True, verbose_name="옵션형태")
     # 이미지
-    # main_img = models.CharField(max_length = 255, verbose_name="대표이미지")
-    main_img = models.ImageField(verbose_name="대표이미지")
+    main_img = models.ImageField(max_length=300, verbose_name="대표이미지")
     detail_description = RichTextUploadingField(blank=True,null=True)
-    brand = models.CharField(max_length = 50, default="")
-    manufacturer = models.CharField(max_length = 50, default="")
-    manufacturing_date = models.DateField(null = True)
-    effective_date = models.DateField(null = True)
-    origin_code = models.CharField(max_length=10)
-    importer = models.CharField(max_length = 50)
-    is_plural_origin = models.BooleanField(default=False)
-    origin_direct_input = models.CharField(max_length = 50, default="")
+    brand = models.CharField(max_length = 50, default="", verbose_name="브랜드")
+    manufacturer = models.CharField(max_length = 50, default="", blank=True, verbose_name="제조사")
+    manufacturing_date = models.DateField(null = True, blank=True, verbose_name="제조일자")
+    effective_date = models.DateField(null = True, blank=True, verbose_name="유효일자")
+    origin_code = models.CharField(max_length=10, verbose_name="원산지코드")
+    importer = models.CharField(max_length = 50, blank=True, verbose_name="수입사")
+    is_plural_origin = models.BooleanField(default=False, verbose_name="복수원산지여부")
+    origin_direct_input = models.CharField(max_length = 50, default="", blank=True, verbose_name="원산지 직접입력")
     # is_minor = models.BooleanField()
     shipping = models.ForeignKey(Shipping, on_delete = models.SET_NULL, null = True, blank=True, verbose_name="택배")
     # info_template_code = models.IntegerField(null = True)
@@ -126,7 +130,8 @@ class AfterService(models.Model):
         return self.product.name
 
 class Book(models.Model):
-    product = models.ForeignKey(Product, on_delete = models.CASCADE, verbose_name="상품명")
+    # product = models.ForeignKey(Product, on_delete = models.CASCADE, verbose_name="상품명")
+    product = models.OneToOneField(Product, on_delete = models.CASCADE, verbose_name="상품명")
     ISBN = models.IntegerField(default=0, blank=True)
     ISSN = models.IntegerField(default=0, blank=True)
     is_independent_publication = models.BooleanField(default=False, blank=True, verbose_name="독립출판")
@@ -137,22 +142,9 @@ class Book(models.Model):
     translator = models.CharField(max_length = 100, default="", blank=True, verbose_name="번역자명")
     is_cultural_expenses_income_tax_deduction = models.BooleanField(default=False, verbose_name="문화비 소득공제")
 
-# class OptionType(models.Model):
-#     # OptionType = (
-#     #     ("단독", "solitary"),
-#     #     ("조합", "combination")
-#     # )
-
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     # option_type = models.CharField(max_length = 10, choices=OptionType)
-#     option_type = models.CharField(max_length = 10)
-
 class OptionName(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="상품")
     name = models.CharField(max_length=50, verbose_name="옵션명")
-
-    def option(self):
-        return self.option_set.all()
 
 class Option(models.Model):
     option_name = models.ForeignKey(OptionName, on_delete = models.CASCADE, verbose_name="옵션")
@@ -160,7 +152,7 @@ class Option(models.Model):
     price = models.IntegerField(verbose_name="옵션가")
 
 class OptionStockNum(models.Model):
-    option = models.ForeignKey(Option, on_delete = models.CASCADE, verbose_name="옵션")
+    option = models.OneToOneField(Option, on_delete=models.CASCADE, verbose_name="옵션")
     num = models.IntegerField(verbose_name="재고수량")
 
 class DirectInputOption(models.Model):
@@ -177,7 +169,6 @@ class AdditionalProductDetail(models.Model):
     price = models.IntegerField(verbose_name="상품가")
     num = models.IntegerField(verbose_name="재고수량")
 
-from django.utils.safestring import mark_safe
 class SubImg(models.Model):
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
-    img = models.ImageField(max_length=200)
+    img = models.ImageField(max_length=300)
