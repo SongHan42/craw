@@ -7,30 +7,18 @@ import datetime
 from . import utils
 from ..models import *
 import time
-from selenium.common.exceptions import NoSuchElementException
 
 def save_imgs(data, imgs_url, product):
-    #동영상은 대기하세요~~
-    # folder = './img'
-    # data["추가이미지"] = ""
-    # print(imgs_url)
-
-    # if not os.path.isdir(folder):
-    #     os.mkdir(folder)
     
     for index, link in enumerate(imgs_url):
-        # urllib.request.urlretrieve(link.split('?')[0], f'{folder}/{data["상품번호"]}_{index}.jpg')
-        # img = "<img src=" + link.split('?')[0] + "/>"
         img = link.split('?')[0]
         if index == 0:
             product.main_img = img
-            # data["대표이미지"] = f'{data["상품번호"]}_{index}.jpg'
         else:
             sub_img = SubImg()
             sub_img.product = product
             sub_img.img = img
             sub_img.save()
-            # data["추가이미지"] += f'{data["상품번호"]}_{index}.jpg\n'
 
 def parse_script(driver, category_dict, product):
     wait = WebDriverWait(driver,20)
@@ -199,34 +187,11 @@ def set_table(driver, data, delivery, origin_area, product):
 
             main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
             for detail in main_div:
-                # print(detail.text)
                 tmp = detail.find_elements(By.CSS_SELECTOR, "img")
                 if tmp:
                     detail_descript += f'<img src="{tmp[0].get_attribute("data-src")}" />\n'
                 else:
                     detail_descript += detail.get_attribute("outerHTML")
-                # tmp += detail.get_attribute("outerHTML")
-                    # data["상세설명"] += detail.get_attribute("outerHTML")
-            
-            # for img in div.find_elements(By.CSS_SELECTOR, "img"):
-            #     data_src = img.get_attribute("data-src")
-            #     if data_src.find("video-phinf") == -1:
-            #         data["상세설명"] += f'<img src="{data_src}" />\n'
-                    
-            # main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div")
-            # for detail in div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div"):
-            #     if detail.text:
-            #         data["상세설명"] += detail.text + "\n"
-            #     else:
-            #         img = div.find_element(By.CSS_SELECTOR, "img")
-            #         src = img.get_attribute("data-src")
-            #         if src and src.find("video") == -1 and src.find("data:image") == -1:
-            #             data["상세설명"] += '<img src="' + img.get_attribute("data-src") + '">\n'
-
-    # for t in img_html_list:
-    #     print(t)
-    #     print("----==============")
-    # print(tmp)
     data["상세설명"] = detail_descript
     for tr in driver.find_elements(By.CSS_SELECTOR, "#RETURNPOLICY > div > table > tbody > tr"):
         add_data(tr, data, delivery, origin_area, product)
@@ -254,8 +219,6 @@ def save_db(data, product):
     if data.get("상품정보제공시\n제조자"):
         product.info_manufacturer = data["상품정보제공시\n제조자"]
     product.detail_description = data["상세설명"]
-    # print(data["상세설명"])
-    # print(product.detail_description)
     product.save()
 
     after_service = AfterService()
@@ -285,7 +248,6 @@ def goods_details(driver, url, delivery, origin_area, category):
     data = {}
     product = Product()
 
-    # try:
     driver.get(url)
 
     wait = WebDriverWait(driver,10)
@@ -305,7 +267,4 @@ def goods_details(driver, url, delivery, origin_area, category):
     set_table(driver, data, delivery, origin_area, product)
     save_imgs(data, imgs_url, product)
 
-    # except:
-    #     driver.quit()
-    #     exit()
     save_db(data, product)

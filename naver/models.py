@@ -122,6 +122,8 @@ class AfterService(models.Model):
     announcement = models.TextField(verbose_name="A/S 안내사항")
     seller_specifics = models.TextField(default="", verbose_name="판매자특이사항")
 
+    def __str__(self):
+        return self.product.name
 
 class Book(models.Model):
     product = models.ForeignKey(Product, on_delete = models.CASCADE, verbose_name="상품명")
