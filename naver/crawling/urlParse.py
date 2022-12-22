@@ -13,6 +13,7 @@ def url_parse(driver, url, url_list):
     page_num = 1
     driver.get(url)
     while (True):
+        print(page_num)
         try:
                #CategoryProducts > ul > li:nth-child(37)
             WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#CategoryProducts > ul > li")))
