@@ -6,7 +6,7 @@ def set_delivery(delivery):
     for sheet_nm in wb.sheetnames:
         sheet = wb[sheet_nm]
         for row_data in sheet.iter_rows(min_row=2):
-            delivery[row_data[1].value] = row_data[0].value;
+            delivery[row_data[1].value] = row_data[0].value
     wb.close()
 
 def set_origin(origin_area):
@@ -14,7 +14,7 @@ def set_origin(origin_area):
     for sheet_nm in wb.sheetnames:
         sheet = wb[sheet_nm]
         for row_data in sheet.iter_rows(min_row=2):
-            origin_area[row_data[1].value] = row_data[0].value;
+            origin_area[row_data[1].value] = row_data[0].value
     wb.close()
 
 def set_category(category):
