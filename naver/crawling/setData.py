@@ -56,10 +56,6 @@ def add_data(tr, data, delivery, origin_area, product):
         # elif key == "판매자 지정택배사":
         #     data["택배사코드"] = delivery[td[i].text]
         elif key == "원산지":
-            # area = td[i].text.split(" ")[-1].split(")")[0]
-            # if origin_area.get(area):
-            #     product.origin_code = origin_area[area]
-            # else:
             product.origin_code = "04"
             product.origin_direct_input = td[i].text
         # elif key == "반품배송비":
@@ -90,6 +86,36 @@ def add_data(tr, data, delivery, origin_area, product):
         else:
             data[key.split("-")[0]] = td[i].text
 
+def option_list_crawling(driver, wait, product, option_list, option_name_list, option_check_list, idx):
+    click_num = 0
+    if product.option_type != "조합형":
+        product.option_type = "단독형"
+    while True:
+        option_list[idx].click()
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > ul > li > a')))
+        selects = driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > ul > li > a')
+        if click_num >= len(selects):
+            break
+        select = selects[click_num]
+        value = utils.remove_price_single(select.text)
+        price = utils.only_num_price(select.text)
+        if price != '0':
+            product.option_type = "조합형"
+        temp = set(option_check_list[idx])
+        option_check_list[idx].add(value)
+        if len(temp) != len(option_check_list[idx]):
+            option = Option()
+            option.option_name = option_name_list[idx]
+            option.value = value
+            option.price = price
+            option.save()
+        click_num += 1
+        if select.text.find("(품절)") == -1 and idx + 1 != len(option_list):
+            select.click()
+            option_list_crawling(driver, wait, product, option_list, option_name_list, option_check_list, idx + 1)
+        else:
+            option_list[idx].click()
+
 def set_option(driver, wait, data, product):
 
     for input in driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > label'):
@@ -104,53 +130,71 @@ def set_option(driver, wait, data, product):
         return
     if (option_button[0].text == "배송비 절약상품 보기"):
         del option_button[0]
+    option_list = []
+
     for op in option_button:
         type = op.find_element(By.XPATH, '..').find_element(By.XPATH, '..').find_element(By.CSS_SELECTOR, 'span').text
+        if type != "추가상품":
+            option_list.append(op)
+            continue
         op.click()
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > ul > li > a')))
         select = driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > ul > li > a')
         select_text = [sel.text for sel in select]
-        if (type == "추가상품"):
-            additional_product_name = AdditionalProductName()
-            additional_product_name.name = op.text
-            additional_product_name.product = product
-            additional_product_name.save()
+        additional_product_name = AdditionalProductName()
+        additional_product_name.name = op.text
+        additional_product_name.product = product
+        additional_product_name.save()
 
-            values = (utils.remove_price(select_text))
-            prices = [utils.only_num_price(price) for price in select_text]
-            for i in range(len(values)):
-                additional_product_detail = AdditionalProductDetail()
-                additional_product_detail.additional_product_name = additional_product_name
-                additional_product_detail.value = values[i]
-                additional_product_detail.price = prices[i]
-                additional_product_detail.num = 1
-                additional_product_detail.save()
-        else:
+        values = (utils.remove_price(select_text))
+        prices = [utils.only_num_price(price) for price in select_text]
+        for i in range(len(values)):
+            additional_product_detail = AdditionalProductDetail()
+            additional_product_detail.additional_product_name = additional_product_name
+            additional_product_detail.value = values[i]
+            additional_product_detail.price = prices[i]
+            additional_product_detail.num = 1
+            additional_product_detail.save()
+        op.click()
+    
+    if option_list:
+        option_name_list = []
+        option_check_list = []
+        for option in option_list:
+            option_check_list.append(set())
             option_name = OptionName()
+            option_name.name = option.text
             option_name.product = product
-            option_name.name = op.text
             option_name.save()
-            if product.option_type != "조합형":
-                product.option_type = "단독형"
+            option_name_list.append(option_name)
+            
+        option_list_crawling(driver, wait, product, option_list, option_name_list, option_check_list, 0)
+        # else:
+        #     option_name = OptionName()
+        #     option_name.product = product
+        #     option_name.name = op.text
+        #     option_name.save()
+        #     if product.option_type != "조합형":
+        #         product.option_type = "단독형"
 
-            values = (utils.remove_price(select_text))
-            prices = [utils.only_num_price(price) for price in select_text]
-            for i in range(len(values)):
-                option = Option()
-                option.option_name = option_name
-                option.value = values[i]
-                if prices[i] != '0':
-                    product.option_type = "조합형"
-                option.price = prices[i]
-                option.save()
-        check = 0
-        for sel in select:
-            if (sel.text.find("(품절)") == -1):
-                check = 1
-                sel.click()
-                break
-        if check != 1:
-            op.click()
+        #     values = (utils.remove_price(select_text))
+        #     prices = [utils.only_num_price(price) for price in select_text]
+        #     for i in range(len(values)):
+        #         option = Option()
+        #         option.option_name = option_name
+        #         option.value = values[i]
+        #         if prices[i] != '0':
+        #             product.option_type = "조합형"
+        #         option.price = prices[i]
+        #         option.save()
+        # check = 0
+        # for sel in select:
+        #     if (sel.text.find("(품절)") == -1):
+        #         check = 1
+        #         sel.click()
+        #         break
+        # if check != 1:
+        #     op.click()
 
     if product.option_type != "":
         options = product.optionname_set.all()[0].option_set.all()
@@ -178,13 +222,6 @@ def set_table(driver, data, delivery, origin_area, product):
                 add_data(tr, data, delivery, origin_area, product)
         else:
             detail_descript = ""
-            # img_html_list = []
-            # for img in div.find_elements(By.CSS_SELECTOR, "img"):
-            #     data_src = img.get_attribute("data-src")
-            #     if data_src.find("video-phinf") == -1:
-            #         img_html_list.append(f'<div><img alt="" class="se-image-resource" src="{data_src}" /></div>\n')
-                    # data["상세설명"] += f'<img src="{data_src}" />\n'
-
             main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
             for detail in main_div:
                 tmp = detail.find_elements(By.CSS_SELECTOR, "img")
@@ -256,10 +293,7 @@ def goods_details(driver, url, delivery, origin_area, category):
 
     product.name = driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > h3').text
     parse_script(driver, category, product)
-    #content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._3k440DUKzy > div.WrkQhIlUY0
-    #content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._3k440DUKzy > div.WrkQhIlUY0 > div > strong > span._1LY7DqCnwR
-    product.price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div._3k440DUKzy > div.WrkQhIlUY0 > div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
-    #product.price = int(utils.only_num_price(driver.find_element(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div").find_elements(By.CSS_SELECTOR, div)[1].find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
+    product.price = int(utils.only_num_price(driver.find_elements(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div > div")[1].find_element(By.CSS_SELECTOR, "div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
     product.stock_num = 1
     product.product_state = "신상품"
     product.save()
