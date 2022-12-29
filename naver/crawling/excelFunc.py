@@ -42,12 +42,13 @@ def set_category(category):
 #         if data.get(key):
 #             sheet.cell(row=row_count, column=idx + 1).value = data[key]
 
-def db_to_xl():
+def db_to_xl(host_url):
     wb = xl.load_workbook('./naver/crawling/excel/naver.xlsx')
     sheet = wb["일괄등록"]
     sheet.delete_rows(3,1000)
 
     all_product = Product.objects.all()
+
 
     for idx, p in enumerate(all_product):
         # b = product.book_set.all()
@@ -106,7 +107,10 @@ def db_to_xl():
         sheet.cell(row = count, column = 15).value = additional_p_value_str
         sheet.cell(row = count, column = 16).value = additional_p_price_str
         sheet.cell(row = count, column = 17).value = additional_p_num_str
-        sheet.cell(row = count, column = 18).value = str(p.main_img)
+        if str(p.main_img).find("http://") == -1 or str(p.main_img).find("https://"):
+            sheet.cell(row = count, column = 18).value = "http://" + host_url + str(p.main_img)
+        else:
+            sheet.cell(row = count, column = 18).value = str(p.main_img)
         sub_imgs = p.subimg_set.all()
         sub_img_str = ""
         for sub_img in sub_imgs:
