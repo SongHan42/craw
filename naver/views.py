@@ -19,8 +19,8 @@ def index(request):
     return render(request, 'naver/index.html')
 
 def crawling(request):
-    main.crawling(request.POST['url'])
-    return HttpResponseRedirect(reverse('index'))
+    result = main.crawling.delay(request.POST['url'])
+    return render(request, 'naver/display_progress.html', context={'task_id': result.task_id})
 
 def excel(request):
     excelFunc.db_to_xl()
