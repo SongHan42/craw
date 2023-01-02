@@ -52,7 +52,6 @@ class Product(models.Model):
     class StateChoices(models.TextChoices):
         NEW = "신상품", "신상품"
         USED = "중고상품", "중고상품"
-    
 
     class VatChoices(models.TextChoices):
         TAXATION = "과세상품", "과세상품"
@@ -116,6 +115,8 @@ class Product(models.Model):
     review_exposure_state = models.BooleanField(default=True, verbose_name="구매평 노출여부")
     review_non_exposure_reson = models.TextField(default="", blank=True, verbose_name="구매평 비노출사유")
     # "스토어찜회원 전용여부"
+
+    url = models.CharField(max_length=400)
 
     def __str__(self):
         return self.name

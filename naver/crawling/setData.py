@@ -283,26 +283,33 @@ def save_db(data, product):
         book.save()
    
 def goods_details(driver, url, delivery, origin_area, category):
-    data = {}
+    if Product.objects.filter(url=url):
+        return
     product = Product()
+    try:
+        data = {}
+        product = Product()
+        product.url = url
 
-    driver.get(url)
+        driver.get(url)
 
-    wait = WebDriverWait(driver,10)
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#INTRODUCE')))
+        wait = WebDriverWait(driver,10)
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#INTRODUCE')))
 
-    product.name = driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > h3').text
-    parse_script(driver, category, product)
-    product.price = int(utils.only_num_price(driver.find_elements(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div > div")[1].find_element(By.CSS_SELECTOR, "div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
-    product.stock_num = 1
-    product.product_state = "신상품"
-    product.save()
-    set_option(driver, wait, data, product)
-    data["상세설명"] = ""
-    imgs_url = [img.get_attribute('src') for img in driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > ul > li > a > img')]
-    if (len(imgs_url) == 0):
-        imgs_url = [driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > div > div > img').get_attribute('src')]
-    set_table(driver, data, delivery, origin_area, product)
-    save_imgs(data, imgs_url, product)
+        product.name = driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > fieldset > div > div > h3').text
+        parse_script(driver, category, product)
+        product.price = int(utils.only_num_price(driver.find_elements(By.CSS_SELECTOR, "#content > div > div._2-I30XS1lA > div._2QCa6wHHPy > fieldset > div > div")[1].find_element(By.CSS_SELECTOR, "div").find_element(By.CSS_SELECTOR, "span._1LY7DqCnwR").text + "원)"))
+        product.stock_num = 1
+        product.product_state = "신상품"
+        product.save()
+        set_option(driver, wait, data, product)
+        data["상세설명"] = ""
+        imgs_url = [img.get_attribute('src') for img in driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > ul > li > a > img')]
+        if (len(imgs_url) == 0):
+            imgs_url = [driver.find_element(By.CSS_SELECTOR, '#content > div > div > div > div > div > img').get_attribute('src')]
+        set_table(driver, data, delivery, origin_area, product)
+        save_imgs(data, imgs_url, product)
 
-    save_db(data, product)
+        save_db(data, product)
+    except:
+        product.delete()

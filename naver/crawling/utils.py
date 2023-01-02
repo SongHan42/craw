@@ -43,9 +43,9 @@ def remove_price(array) :
                     option_str += str + " "
                 ret+= [option_str[:-1]]
             else:
-                ret += [arr[:arr.rfind("(")]]
+                ret += [arr[:arr.rfind(" (")]]
         elif t[-1].find("원)") != -1:
-            ret += [arr[:arr.rfind("(")]]
+            ret += [arr[:arr.rfind(" (")]]
         else:
             ret += [arr]
     return (ret)
