@@ -42,12 +42,13 @@ def set_category(category):
 #         if data.get(key):
 #             sheet.cell(row=row_count, column=idx + 1).value = data[key]
 
-def db_to_xl():
+def db_to_xl(host_url):
     wb = xl.load_workbook('./naver/crawling/excel/naver.xlsx')
     sheet = wb["일괄등록"]
     sheet.delete_rows(3,1000)
 
     all_product = Product.objects.all()
+
 
     for idx, p in enumerate(all_product):
         # b = product.book_set.all()
@@ -70,9 +71,8 @@ def db_to_xl():
             option_name_str += o_name.name + "\n"
             option = o_name.option_set.all()
             for o in option:
-                option_stock_num = o.optionstocknum_set.all()
-                for o_stock_num in option_stock_num:
-                    option_stock_num_str += str(o_stock_num.num) + ","
+                if hasattr(o, 'optionstocknum'):
+                    option_stock_num_str += str(o.optionstocknum.num) + ","
                 option_value_str += str(o.value) + ","
                 option_price_str += str(o.price) + ","
             option_value_str = option_value_str[:-1] + "\n"
@@ -107,11 +107,14 @@ def db_to_xl():
         sheet.cell(row = count, column = 15).value = additional_p_value_str
         sheet.cell(row = count, column = 16).value = additional_p_price_str
         sheet.cell(row = count, column = 17).value = additional_p_num_str
-        sheet.cell(row = count, column = 18).value = p.main_img
+        if str(p.main_img).find("http://") == -1 or str(p.main_img).find("https://"):
+            sheet.cell(row = count, column = 18).value = "http://" + host_url + str(p.main_img)
+        else:
+            sheet.cell(row = count, column = 18).value = str(p.main_img)
         sub_imgs = p.subimg_set.all()
         sub_img_str = ""
         for sub_img in sub_imgs:
-            sub_img_str += sub_img.img + "\n"
+            sub_img_str += str(sub_img.img) + "\n"
         sheet.cell(row = count, column = 19).value = sub_img_str[:-1]
         # 
         # sheet.cell(row = count, column = 20).value = 
@@ -150,7 +153,7 @@ def db_to_xl():
         # sheet.cell(row = count, column = 43).value = 교환배송비
         # sheet.cell(row = count, column = 44).value = 지역별 차등 배송비
         # sheet.cell(row = count, column = 45).value = 별도설치비
-        sheet.cell(row = count, column = 46).value = p.info_template_code
+        # sheet.cell(row = count, column = 46).value = p.info_template_code
         sheet.cell(row = count, column = 47).value = p.info_name
         sheet.cell(row = count, column = 48).value = p.info_model_name
         sheet.cell(row = count, column = 49).value = p.info_authorization
@@ -180,9 +183,10 @@ def db_to_xl():
         sheet.cell(row = count, column = 73).value = p.review_exposure_state
         sheet.cell(row = count, column = 74).value = p.review_non_exposure_reson
 
-        book = p.book_set.all()
-        if (book and book[0]):
-            b = book[0]
+        # book = p.book_set.all()
+        # if (book and book[0]):
+        if hasattr(p, 'book'):
+            b = p.book
             sheet.cell(row = count, column = 76).value = b.ISBN
             sheet.cell(row = count, column = 77).value = b.ISSN
             sheet.cell(row = count, column = 78).value = b.is_independent_publication

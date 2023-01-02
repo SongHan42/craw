@@ -19,12 +19,11 @@ def index(request):
     return render(request, 'naver/index.html')
 
 def crawling(request):
-    main.crawling(request.POST['url'])
-    return HttpResponseRedirect(reverse('index'))
+    result = main.crawling.delay(request.POST['url'])
+    return render(request, 'naver/display_progress.html', context={'task_id': result.task_id})
 
 def excel(request):
-    excelFunc.db_to_xl()
-    print(settings.STATIC_ROOT)
+    excelFunc.db_to_xl(request.get_host() + "/media/")
     file_path = os.path.join(settings.STATIC_ROOT, "test.xlsx")
     print(file_path)
 

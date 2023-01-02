@@ -16,6 +16,21 @@ def only_num_price(s):
         return arr[-1].replace("원)", "").replace(",", "").replace("(", "").replace("+", "")
     return "0"
 
+def remove_price_single(text):
+    t = text.split(' ')
+    if t[-1] == "(품절)":
+        if t[-2].find("원)") != -1:
+            option_str  = ""
+            for str in t[:-2]:
+                option_str += str + " "
+            return option_str[:-1]
+        else:
+            return text[:text.rfind(" (")]
+    elif t[-1].find("원)") != -1:
+        return text[:text.rfind(" (")]
+    else:
+        return text
+
 def remove_price(array) :
     ret = []
 
@@ -28,9 +43,9 @@ def remove_price(array) :
                     option_str += str + " "
                 ret+= [option_str[:-1]]
             else:
-                ret += [arr[:arr.rfind("(")]]
+                ret += [arr[:arr.rfind(" (")]]
         elif t[-1].find("원)") != -1:
-            ret += [arr[:arr.rfind("(")]]
+            ret += [arr[:arr.rfind(" (")]]
         else:
             ret += [arr]
     return (ret)
