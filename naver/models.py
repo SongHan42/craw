@@ -116,7 +116,7 @@ class Product(models.Model):
     review_non_exposure_reson = models.TextField(default="", blank=True, verbose_name="구매평 비노출사유")
     # "스토어찜회원 전용여부"
 
-    url = models.CharField(max_length=400)
+    url = models.CharField(max_length=400, unique=True)
 
     def __str__(self):
         return self.name
