@@ -302,6 +302,9 @@ def goods_details(driver, url, delivery, origin_area, category):
         product.stock_num = 1
         product.product_state = "신상품"
         product.save()
+    except:
+        return
+    try:
         set_option(driver, wait, data, product)
         data["상세설명"] = ""
         imgs_url = [img.get_attribute('src') for img in driver.find_elements(By.CSS_SELECTOR, '#content > div > div > div > ul > li > a > img')]
