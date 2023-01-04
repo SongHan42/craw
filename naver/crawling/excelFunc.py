@@ -144,23 +144,24 @@ def db_to_xl(host_url, file_name):
         # sheet.cell(row = count, column = 29).value = p.origin_direct_input
         # 배송비 템플릿코드
         # sheet.cell(row = count, column = 30).value = 
+        if p.shipping:
         # 배송 방법
-        # sheet.cell(row = count, column = 31).value = 
-        # sheet.cell(row = count, column = 32).value = 택배사코드
-        # sheet.cell(row = count, column = 33).value = 배송비유형
-        # sheet.cell(row = count, column = 34).value = 기본배송비
-        # sheet.cell(row = count, column = 35).value = 배송비 결제방식
-        # sheet.cell(row = count, column = 36).value = 조건부무료-상품판매가합계
-        # sheet.cell(row = count, column = 37).value = 수량별부과-수량
-        # sheet.cell(row = count, column = 38).value = 구간별2구간
-        # sheet.cell(row = count, column = 39).value = 구간별3구간수량
-        # sheet.cell(row = count, column = 40).value = 구간별3구간배송비
-        # sheet.cell(row = count, column = 41).value = 구간별 추가배송비
-        # sheet.cell(row = count, column = 42).value = 반품배송비
-        # sheet.cell(row = count, column = 43).value = 교환배송비
-        # sheet.cell(row = count, column = 44).value = 지역별 차등 배송비
-        # sheet.cell(row = count, column = 45).value = 별도설치비
-        # sheet.cell(row = count, column = 46).value = p.info_template_code
+            sheet.cell(row = count, column = 31).value = p.shipping.type
+            sheet.cell(row = count, column = 32).value = p.shipping.courier_code
+            sheet.cell(row = count, column = 33).value = p.shipping.cost_type
+            sheet.cell(row = count, column = 34).value = p.shipping.default_cost
+            sheet.cell(row = count, column = 35).value = p.shipping.cost_payment_type
+            # sheet.cell(row = count, column = 36).value = 조건부무료-상품판매가합계
+            # sheet.cell(row = count, column = 37).value = 수량별부과-수량
+            # sheet.cell(row = count, column = 38).value = 구간별2구간
+            # sheet.cell(row = count, column = 39).value = 구간별3구간수량
+            # sheet.cell(row = count, column = 40).value = 구간별3구간배송비
+            # sheet.cell(row = count, column = 41).value = 구간별 추가배송비
+            sheet.cell(row = count, column = 42).value = p.shipping.return_cost
+            sheet.cell(row = count, column = 43).value = p.shipping.exchange_cost
+            # sheet.cell(row = count, column = 44).value = 지역별 차등 배송비
+            # sheet.cell(row = count, column = 45).value = 별도설치비
+            # sheet.cell(row = count, column = 46).value = p.info_template_code
         sheet.cell(row = count, column = 47).value = p.info_name
         sheet.cell(row = count, column = 48).value = p.info_model_name
         sheet.cell(row = count, column = 49).value = p.info_authorization
