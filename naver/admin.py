@@ -39,7 +39,7 @@ class BookInline(admin.StackedInline):
     model = Book
     extra = 0
 
-@admin.action(description="배송 기본 설정")
+@admin.action(description="배송 기본 설정(첫 택배 템플릿 골라짐)")
 def default_shipping(modeladmin, request, queryset):
     shipping = Shipping.objects.all()
     if not shipping:
