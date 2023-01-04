@@ -39,6 +39,20 @@ class BookInline(admin.StackedInline):
     model = Book
     extra = 0
 
+@admin.action(description="배송 기본 설정(첫 택배 템플릿 골라짐)")
+def default_shipping(modeladmin, request, queryset):
+    shipping = Shipping.objects.all()
+    if not shipping:
+        shipping = Shipping()
+        shipping.title = "기본 배송"
+        shipping.type = "택배, 소포, 등기"
+        shipping.cost_type = "무료"
+        shipping.cost_payment_type = "선결제"
+        shipping.save()
+    else:
+        shipping = shipping[0]
+    queryset.update(shipping=shipping)
+
 @admin.register(Product)
 class ProductAdmin(NestedModelAdmin):
     inlines = [
@@ -55,6 +69,8 @@ class ProductAdmin(NestedModelAdmin):
         'id',
         'name',
     )
+
+    actions = [default_shipping]
 
 @admin.register(Shipping)
 class ShippingAdmin(admin.ModelAdmin):
