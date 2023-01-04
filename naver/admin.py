@@ -49,6 +49,8 @@ class ProductAdmin(NestedModelAdmin):
         BookInline
     ]
 
+    search_fields = ['name']
+
 @admin.register(Shipping)
 class ShippingAdmin(admin.ModelAdmin):
     list_display = (
