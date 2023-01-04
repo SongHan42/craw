@@ -51,6 +51,11 @@ class ProductAdmin(NestedModelAdmin):
 
     search_fields = ['name']
 
+    list_display = (
+        'id',
+        'name',
+    )
+
 @admin.register(Shipping)
 class ShippingAdmin(admin.ModelAdmin):
     list_display = (
