@@ -71,7 +71,6 @@ class Product(models.Model):
         BLANK = "", ""
         SOLITARY = "단독형", "단독형"
         COMBINATION = "조합형", "조합형"
-
     name = models.CharField(max_length = 200, verbose_name="상품명")
     #???????????
     category_code = models.IntegerField(verbose_name="카테고리 코드")
