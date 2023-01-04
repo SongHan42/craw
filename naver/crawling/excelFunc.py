@@ -56,6 +56,7 @@ def db_to_xl(host_url, file_name):
         # b = product.book_set.all()
         # if (b):
         count = idx + 3
+        sheet.cell(row = count, column = 1).value = p.id
         sheet.cell(row = count, column = 2).value = p.category_code
         sheet.cell(row = count, column = 3).value = p.name
         sheet.cell(row = count, column = 4).value = p.state
