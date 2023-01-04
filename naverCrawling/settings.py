@@ -23,6 +23,8 @@ CACHES = {
     }
 }
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

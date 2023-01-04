@@ -1,5 +1,7 @@
 import openpyxl as xl
 from ..models import *
+import os
+from django.conf import settings
 
 def set_delivery(delivery):
     wb = xl.load_workbook('./naver/crawling/excel/delivery.xlsx')
@@ -42,7 +44,7 @@ def set_category(category):
 #         if data.get(key):
 #             sheet.cell(row=row_count, column=idx + 1).value = data[key]
 
-def db_to_xl(host_url):
+def db_to_xl(host_url, file_name):
     wb = xl.load_workbook('./naver/crawling/excel/naver.xlsx')
     sheet = wb["일괄등록"]
     sheet.delete_rows(3,1000)
@@ -107,18 +109,21 @@ def db_to_xl(host_url):
         sheet.cell(row = count, column = 15).value = additional_p_value_str
         sheet.cell(row = count, column = 16).value = additional_p_price_str
         sheet.cell(row = count, column = 17).value = additional_p_num_str
-        if str(p.main_img).find("http://") == -1 or str(p.main_img).find("https://"):
-            sheet.cell(row = count, column = 18).value = "http://" + host_url + str(p.main_img)
-        else:
+        if str(p.main_img).find("http://") != -1 or str(p.main_img).find("https://") != -1:
             sheet.cell(row = count, column = 18).value = str(p.main_img)
+        else:
+            sheet.cell(row = count, column = 18).value = "http://" + host_url + str(p.main_img)
         sub_imgs = p.subimg_set.all()
         sub_img_str = ""
         for sub_img in sub_imgs:
-            sub_img_str += str(sub_img.img) + "\n"
+            if str(sub_img.img).find("http://") != -1 or str(sub_img.img).find("https://") != -1:
+                sub_img_str += str(sub_img.img) + "\n"
+            else:
+                sub_img_str += "http://" + host_url + str(sub_img.img) + "\n"
         sheet.cell(row = count, column = 19).value = sub_img_str[:-1]
         # 
         # sheet.cell(row = count, column = 20).value = 
-        sheet.cell(row = count, column = 20).value = "1"
+        sheet.cell(row = count, column = 20).value = p.detail_description
 
         sheet.cell(row = count, column = 21).value = p.brand
         sheet.cell(row = count, column = 22).value = p.manufacturer
@@ -130,7 +135,8 @@ def db_to_xl(host_url):
         sheet.cell(row = count, column = 26).value = p.importer
         
         # AA
-        sheet.cell(row = count, column = 27).value = p.is_plural_origin
+        if p.is_plural_origin == True:
+            sheet.cell(row = count, column = 27).value = "Y"
         sheet.cell(row = count, column = 28).value = p.origin_direct_input
         
         # 미성년자
@@ -165,22 +171,29 @@ def db_to_xl(host_url):
             sheet.cell(row = count, column = 53).value = after_service[0].announcement
             sheet.cell(row = count, column = 54).value = after_service[0].seller_specifics
         
-        sheet.cell(row = count, column = 55).value = p.pc_instant_discount_value
-        sheet.cell(row = count, column = 56).value = p.pc_instant_discount_unit
-        sheet.cell(row = count, column = 57).value = p.mobile_instant_discount_value
-        sheet.cell(row = count, column = 58).value = p.mobile_instant_discount_unit
-        sheet.cell(row = count, column = 59).value = p.multiple_purchase_discount_condition_value
-        sheet.cell(row = count, column = 60).value = p.multiple_purchase_discount_condition_unit
-        sheet.cell(row = count, column = 61).value = p.multiple_purchase_discount_value
-        sheet.cell(row = count, column = 62).value = p.multiple_purchase_discount_unit
+        if p.pc_instant_discount_value != 0:
+            sheet.cell(row = count, column = 55).value = p.pc_instant_discount_value
+            sheet.cell(row = count, column = 56).value = p.pc_instant_discount_unit
+        if p.mobile_instant_discount_value != 0:
+            sheet.cell(row = count, column = 57).value = p.mobile_instant_discount_value
+            sheet.cell(row = count, column = 58).value = p.mobile_instant_discount_unit
+        if p.multiple_purchase_discount_condition_value != 0:
+            sheet.cell(row = count, column = 59).value = p.multiple_purchase_discount_condition_value
+            sheet.cell(row = count, column = 60).value = p.multiple_purchase_discount_condition_unit
+        if p.multiple_purchase_discount_value != 0:
+            sheet.cell(row = count, column = 61).value = p.multiple_purchase_discount_value
+            sheet.cell(row = count, column = 62).value = p.multiple_purchase_discount_unit
 
         # sheet.cell(row = count, column = 63).value = 상품구매시 포인트 지급 값
         # sheet.cell(row = count, column = 64).value = 상품구매시 포인트 지급 단위
         # sheet.cell(row = count, column = 65).value = 상품구매시 포인트 지급 단위
             # 82 = ISBN
-        sheet.cell(row = count, column = 70).value = p.interset_free_installment_month
+        if p.interset_free_installment_month != 0:
+            sheet.cell(row = count, column = 70).value = p.interset_free_installment_month
         sheet.cell(row = count, column = 71).value = p.gift
-        sheet.cell(row = count, column = 73).value = p.review_exposure_state
+        if p.review_exposure_state == False :
+            sheet.cell(row = count, column = 73).value = "N"
+
         sheet.cell(row = count, column = 74).value = p.review_non_exposure_reson
 
         # book = p.book_set.all()
@@ -196,4 +209,6 @@ def db_to_xl(host_url):
             sheet.cell(row = count, column = 82).value = b.painter
             sheet.cell(row = count, column = 83).value = b.translator
             sheet.cell(row = count, column = 84).value = b.is_cultural_expenses_income_tax_deduction
-    wb.save("./static/naver.xlsx")
+
+    file_path = os.path.join(settings.STATIC_ROOT, file_name)
+    wb.save("./static/" + file_name)
