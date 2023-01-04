@@ -11,7 +11,7 @@ from celery_progress.backend import ProgressRecorder
 
 @shared_task(bind=True)
 def crawling(self, url):
-#def crawling(url):
+# def crawling(url):
     # s = Service('./naver/crawing/chromedriver') # Windows는 chromedriver.exe로 변경
     
     chrome_options = webdriver.ChromeOptions()
@@ -38,4 +38,4 @@ def crawling(self, url):
     for idx, detail_url in enumerate(url_list):
         setData.goods_details(driver, detail_url, delivery, origin_area, category)
         progress_recorder.set_progress(idx + 1, len(url_list))
-    # setData.goods_details(driver, "https://brand.naver.com/roundlab/products/4886102737", delivery, origin_area, category)
+    # setData.goods_details(driver, "https://brand.naver.com/malinandgoetz/products/5717518901", delivery, origin_area, category)

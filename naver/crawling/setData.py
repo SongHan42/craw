@@ -223,13 +223,16 @@ def set_table(driver, data, delivery, origin_area, product):
         else:
             detail_descript = ""
             main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
-            for detail in main_div:
-                tmp = detail.find_elements(By.CSS_SELECTOR, "img")
-                if tmp:
-                    for imgTag in tmp:
-                        detail_descript += f'<img src="{imgTag.get_attribute("data-src")}" />\n'
-                else:
-                    detail_descript += detail.get_attribute("outerHTML")
+            if main_div:
+                for detail in main_div:
+                    tmp = detail.find_elements(By.CSS_SELECTOR, "img")
+                    if tmp:
+                        for imgTag in tmp:
+                            detail_descript += f'<img src="{imgTag.get_attribute("data-src")}" />\n'
+                    else:
+                        detail_descript += detail.get_attribute("outerHTML")
+            # else:
+            #     main 구조 다른 거 처리해야함
     data["상세설명"] = detail_descript
     for tr in driver.find_elements(By.CSS_SELECTOR, "#RETURNPOLICY > div > table > tbody > tr"):
         add_data(tr, data, delivery, origin_area, product)
