@@ -48,6 +48,8 @@ def default_shipping(modeladmin, request, queryset):
         shipping.type = "택배, 소포, 등기"
         shipping.cost_type = "무료"
         shipping.cost_payment_type = "선결제"
+        shipping.return_cost = 0
+        shipping.exchange_cost = 0
         shipping.save()
     else:
         shipping = shipping[0]
