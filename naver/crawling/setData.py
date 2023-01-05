@@ -7,6 +7,7 @@ import datetime
 from . import utils
 from ..models import *
 import time
+import re
 
 def save_imgs(data, imgs_url, product):
     
@@ -221,17 +222,23 @@ def set_table(driver, data, delivery, origin_area, product):
             for tr in div.find_elements(By.CSS_SELECTOR, "tr"):
                 add_data(tr, data, delivery, origin_area, product)
         else:
-            detail_descript = ""
-            main_div = div.find_elements(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
-            if main_div:
-                for detail in main_div:
-                    tmp = detail.find_elements(By.CSS_SELECTOR, "img")
-                    if tmp:
-                        for imgTag in tmp:
-                            detail_descript += f'<img src="{imgTag.get_attribute("data-src")}" />\n'
-                    else:
-                        detail_descript += detail.get_attribute("outerHTML")
+            detail_descript = div.find_element(By.CSS_SELECTOR, "div > div").get_attribute("innerHTML")
+            detail_descript = re.sub(' src="[^"]*"', '', detail_descript)
+            detail_descript = re.sub('data-src', 'src', detail_descript)
+            # main_div = div.find_element(By.CSS_SELECTOR, "div.se-main-container > div > div > div > div")
+            # if main_div:
+            #     for detail in main_div:
+            #         tmp = detail.find_elements(By.CSS_SELECTOR, "img")
+            #         if tmp:
+            #             for imgTag in tmp:
+            #                 detail_descript += f'<img src="{imgTag.get_attribute("data-src")}" />\n'
+            #         else:
+            #             detail_descript += detail.get_attribute("outerHTML")
             # else:
+            #     main_div = div.find_element(By.CSS_SELECTOR, "div > div")
+            #     # for a in main_div:
+            #         # print("--" * 30)
+            #     print(main_div.get_attribute("innerHTML"))
             #     main 구조 다른 거 처리해야함
     data["상세설명"] = detail_descript
     for tr in driver.find_elements(By.CSS_SELECTOR, "#RETURNPOLICY > div > table > tbody > tr"):
